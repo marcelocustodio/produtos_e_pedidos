@@ -9,4 +9,6 @@ public interface ProdutoPedidoRepository extends CrudRepository<ProdutoPedido, L
 //    List<Produto> findByTituloContaining(String titulo);
 
 //    List<Produto> findByPrecoLessThan(double preco);
+	
+	ProdutoPedido findByProduto_id(Long produto_id);
 }

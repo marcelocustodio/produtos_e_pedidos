@@ -23,8 +23,10 @@ public class Pedido {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	private String uuid;
 	private String cliente;
+	private double valorTotal;
+	private String situacao; // "aberto" ou "fechado"
 
     @OneToMany(mappedBy = "pedido", cascade = {CascadeType.ALL})
     private Set<ProdutoPedido> produtoPedidos;
@@ -52,6 +54,29 @@ public class Pedido {
 	public void setProdutoPedidos(Set<ProdutoPedido> produtoPedidos) {
 		this.produtoPedidos = produtoPedidos;
 	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public double getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(double valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
+	public String getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(String situacao) {
+		this.situacao = situacao;
+	}
 	
-    
 }

@@ -1,28 +1,29 @@
 package com.senior.crudmanytomany.crudmanytomany3.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.senior.crudmanytomany.crudmanytomany3.dto.ProdutoPedidoDTO;
+import com.senior.crudmanytomany.crudmanytomany3.dto.PedidoDTO;
+import com.senior.crudmanytomany.crudmanytomany3.dto.VendaDTO;
 import com.senior.crudmanytomany.crudmanytomany3.model.Pedido;
-import com.senior.crudmanytomany.crudmanytomany3.model.Produto;
-import com.senior.crudmanytomany.crudmanytomany3.model.ProdutoPedido;
 import com.senior.crudmanytomany.crudmanytomany3.repository.PedidoRepository;
 import com.senior.crudmanytomany.crudmanytomany3.repository.ProdutoPedidoRepository;
 import com.senior.crudmanytomany.crudmanytomany3.repository.ProdutoRepository;
 
 @RestController
 @RequestMapping("/api/v1")
-public class VendaController {
+public class PedidoController {
 
 	@Autowired
 	private ProdutoRepository produtoRepository;
@@ -35,7 +36,52 @@ public class VendaController {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@GetMapping("/pedidos")
+	public List<Pedido> listarPedidos() {
+		
+		System.out.println("LISTAGEM DE PEDIDOS ......");
+		
+		return (List<Pedido>) pedidoRepository.findAll();
+	}
+	
+	@GetMapping("/pedidos/{uuid}")
+	public Pedido procurarPedido(@PathVariable(value = "uuid") String uuid) {
+		
+		Pedido pedido = pedidoRepository.findByuuid(uuid);
 
+		return pedido;
+	}
+	
+	@GetMapping("/pedidos/valorTotalAbaixoDe/{preco}")
+	public List<Pedido> listarValorTotalAbaixoDe(@PathVariable(value = "valorTotal") double valorTotal) {
+		return (List<Pedido>) pedidoRepository.findByValorTotalLessThan(valorTotal);
+	}
+	
+	@PostMapping("/pedidos")
+	public Pedido salvarPedido(@RequestBody PedidoDTO pedidoDTO) {
+
+		Pedido pedido = new Pedido();
+
+		UUID uuid = UUID.randomUUID();
+		String uuidGerado = uuid.toString();
+		System.out.println("UUID gerado: " + uuidGerado);
+
+		pedido.setUuid(uuidGerado);
+		pedido.setCliente(pedidoDTO.getCliente());
+		pedido.setSituacao("aberto");
+
+		return pedidoRepository.save(pedido);
+	}
+	
+	@PostMapping("/realizarVenda")
+	public Pedido realizarVenda(@RequestBody VendaDTO vendaDTO) {
+		//
+		return null;
+	}
+	
+	
+/*
 	@GetMapping("/produtos")
 	public List<Produto> listarProdutos() {
 		System.out.println("LISTAGEM DE PRODUTOS......");
@@ -78,7 +124,7 @@ public class VendaController {
 		return produtoPedidoRepository.save(produtoPedido);
 	}
 	*/
-	@PostMapping("/itensdevendas")
+	/*@PostMapping("/itensdevendas")
 	public ProdutoPedido salvarProdutoPedido(@RequestBody ProdutoPedidoDTO produtoPedidoDTO) {
 
 	    ProdutoPedido prodPedido = new ProdutoPedido();
